@@ -4,7 +4,9 @@
 UDPまたはシリアルを使ってPythonから M5 Atom 経由でGLOWをコントロールします。<br>
 M5 Atom をブリッジとして使う M5 Atom 用のプログラムです。
 
-Pythonからのサンプルプログラムは以下の通りです。(UDPで通信する場合）
+Pythonからのサンプルプログラムは以下の通りです。
+
+##### UDPで通信する場合
 
 <pre>
 from __future__ import print_function
@@ -26,6 +28,38 @@ def main():
       # print(message)
       sock.sendto(message, (host, port))
       time.sleep(2)
+  return
+
+if __name__ == '__main__':
+  main()
+</pre>
+
+##### シリアルで通信する場合
+
+<pre>
+pip install pyserial
+</pre>
+
+<pre>
+import serial
+import time
+
+def main():
+  ser = serial.Serial("COM7",115200,timeout=None)
+  func = 1
+  group = 2
+  id = 3
+  comm = 0x1c7
+  message = (str(func)+","+str(group)+","+str(id)+","+str(comm)+"\n").encode('utf-8')
+  ser.write(message)
+  time.sleep(5)
+  func = 0
+  group = 2
+  id = 3
+  comm = 0
+  message = (str(func)+","+str(group)+","+str(id)+","+str(comm)+"\n").encode('utf-8')
+  ser.write(message)
+  ser.close()
   return
 
 if __name__ == '__main__':
